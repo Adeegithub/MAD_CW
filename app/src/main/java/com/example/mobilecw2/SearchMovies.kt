@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.room.Room
+import kotlinx.android.synthetic.main.activity_search_movies.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -33,8 +34,6 @@ class SearchMovies : AppCompatActivity() {
 
         val stb = StringBuilder()
         retrieveMovieBtn.setOnClickListener {
-
-
             val editValue = tv1.text.toString() //textedit
             val urlString = "https://www.omdbapi.com/?t=$editValue&apikey=d6999af3";
             val url = URL(urlString)
@@ -60,16 +59,39 @@ class SearchMovies : AppCompatActivity() {
 
             }
         } catch (e: Exception){
-            tv1.setText("Enter a Valid Input!")
+            tvError.setText("Enter a Valid Input!")
         }
         }
 
         saveMovieBtn.setOnClickListener {
+            val editValue = tv1.text.toString() //textedit
+            val urlString = "https://www.omdbapi.com/?t=$editValue&apikey=d6999af3";
+            val url = URL(urlString)
+            val con: HttpURLConnection = url.openConnection() as HttpURLConnection
+
+            try{
                 runBlocking {
+
                     launch {
+                        // run the code of the coroutine in a new thread
+                        stb.clear()
+                        withContext(Dispatchers.IO) {
+                            var bf = BufferedReader(InputStreamReader(con.inputStream))
+                            var line: String? = bf.readLine()
+                            while (line != null) {
+                                stb.append(line + "\n")
+                                line = bf.readLine()
+                            }
+
+                        }
+                        parseJSON(stb)
                         saveMovie(stb)
                     }
+
                 }
+            } catch (e: Exception){
+                tvError.setText("Enter a Valid Input!")
+            }
         }
     }
 
@@ -108,7 +130,7 @@ class SearchMovies : AppCompatActivity() {
             }
 
     private suspend fun saveMovie(stb: java.lang.StringBuilder){
-        val tv3 = findViewById<TextView>(R.id.tv3)
+        val tv3 = findViewById<TextView>(R.id.tv3)//Testing Purpose
 
         val db = Room.databaseBuilder(this, MovieDatabase::class.java,"mydatabase").build()
         val movieDao = db.movieDao()

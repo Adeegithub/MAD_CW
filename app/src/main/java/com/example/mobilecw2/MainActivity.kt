@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import kotlinx.android.synthetic.main.popup_window.view.*
@@ -38,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         val searchActorsBtn = findViewById<Button>(R.id.b3) //Search Actors Button
         val viewDatabaseBtn = findViewById<Button>(R.id.b8) //View Database Button
         val viewPopupMovieBtn = findViewById<Button>(R.id.b7) //Search Button in Popup
+        val deleteDB = findViewById<Button>(R.id.b9) //Delete Database
 
         addMoviesBtn.setOnClickListener {
                 runBlocking {
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-                        //movieDao.deleteAll()
+
 
 //                        val movies: List<MovieEntity> = movieDao.getAll()
 //                        for (M in movies) {
@@ -134,11 +134,20 @@ class MainActivity : AppCompatActivity() {
             startActivity(newGameIntent3)
         }
 
+        deleteDB.setOnClickListener {
+            runBlocking {
+                launch {
+                    movieDao.deleteAll()
+                }
+            }
+
+        }
+
         viewPopupMovieBtn.setOnClickListener {
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.popup_window,null)
             val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)
-                .setTitle("Login Form")
+                .setTitle("Search")
 
             //Show Dialog
             val mAlertDialog = mBuilder.show()
@@ -146,23 +155,18 @@ class MainActivity : AppCompatActivity() {
             //Search button click custom layout
             mDialogView.popUpSearchButton.setOnClickListener {
                 //dismiss dialog
-                mAlertDialog.dismiss()
+                //mAlertDialog.dismiss()
                 //Get text from EditTexts of Custom Layout
 
                 val name = mDialogView.dialogTE.text.toString()
 
                 //set input text in text view
-
             }
             //cancel button of custom layout
             mDialogView.popUpCancelButton.setOnClickListener {
                 //dismiss dialog
                 mAlertDialog.dismiss()
-
-
             }
         }
-
     }
-
 }
