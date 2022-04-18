@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileCW2">
         <activity
+            android:name=".ResultsOfMovie"
+            android:exported="false" />
+        <activity
             android:name=".ViewDatabase"
             android:exported="false" />
         <activity

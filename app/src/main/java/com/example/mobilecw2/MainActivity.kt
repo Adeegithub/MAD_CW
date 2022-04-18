@@ -35,9 +35,11 @@ class MainActivity : AppCompatActivity() {
         val addMoviesBtn = findViewById<Button>(R.id.b1) //Add Movies Button
         val searchMoviesBtn = findViewById<Button>(R.id.b2) //Search Movies Button
         val searchActorsBtn = findViewById<Button>(R.id.b3) //Search Actors Button
-        val viewDatabaseBtn = findViewById<Button>(R.id.b8) //View Database Button
         val viewPopupMovieBtn = findViewById<Button>(R.id.b7) //Search Button in Popup
+        val viewDatabaseBtn = findViewById<Button>(R.id.b8) //View Database Button
         val deleteDB = findViewById<Button>(R.id.b9) //Delete Database
+
+        var MovieName : String
 
         addMoviesBtn.setOnClickListener {
                 runBlocking {
@@ -154,14 +156,19 @@ class MainActivity : AppCompatActivity() {
 
             //Search button click custom layout
             mDialogView.popUpSearchButton.setOnClickListener {
-                //dismiss dialog
-                //mAlertDialog.dismiss()
-                //Get text from EditTexts of Custom Layout
 
-                val name = mDialogView.dialogTE.text.toString()
+
+                //dismiss dialog
+                mAlertDialog.dismiss()
+                MovieName = mDialogView.dialogTE.text.toString()
+                val i = Intent(this,ResultsOfMovie::class.java).apply {
+                    putExtra("MovieName",MovieName)
+                }
+                startActivity(i)
 
                 //set input text in text view
             }
+
             //cancel button of custom layout
             mDialogView.popUpCancelButton.setOnClickListener {
                 //dismiss dialog
